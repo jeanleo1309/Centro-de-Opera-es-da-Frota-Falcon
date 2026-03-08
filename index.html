@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Centro de Operações da Frota</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<h1>🚁 Centro de Operações da Frota</h1>
+<div style="margin-bottom:20px;">
+
+<a href="/"><button>🏠 Dashboard</button></a>
+
+<a href="/radar"><button>🚁 Radar</button></a>
+
+<a href="/flight"><button>📋 Flight Board</button></a>
+
+<a href="/painel"><button>🖥 Painel TV</button></a>
+
+<a href="/relatorio"><button>📊 Relatório</button></a>
+
+<a href="/historico"><button>📚 Histórico</button></a>
+
+</div>
+
+<a href="/relatorio">
+<button>📊 Ver Relatório do Dia</button>
+</a>
+
+<hr>
+
+
+<h2>📅 Agendar Voo</h2>
+
+<form method="POST" action="/agendar_voo">
+
+<select name="heli">
+
+{% for heli in helicopteros %}
+<option value="{{ heli[0] }}">{{ heli[1] }}</option>
+{% endfor %}
+
+</select>
+<hr>
+
+<h2>🛰 Radar Rápido</h2>
+
+<a href="/radar">
+<button>🚁 Abrir Radar Operacional</button>
+</a>
+
+<input type="date" name="data">
+<input type="time" name="hora">
+<input name="duracao" placeholder="Duração (min)">
+
+<button type="submit">Agendar</button>
+
+</form>
+
+<hr>
+
+
+<h2>📋 Agenda de Voos</h2>
+
+<table border="1" cellpadding="10">
+
+<tr>
+<th>Helicóptero</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Duração</th>
+<th>Status</th>
+<th>Ação</th>
+</tr>
+
+{% for voo in voos %}
+
+<tr>
+
+<td>{{ voo[1] }}</td>
+<td>{{ voo[2] }}</td>
+<td>{{ voo[3] }}</td>
+<td>{{ voo[4] }} min</td>
+
+<td>
+
+{% if voo[5] == "agendado" %}
+🟡 Agendado
+{% else %}
+🟢 Realizado
+{% endif %}
+
+</td>
+
+<td>
+
+{% if voo[5] == "agendado" %}
+
+<form method="POST" action="/confirmar_voo">
+
+<input type="hidden" name="voo_id" value="{{ voo[0] }}">
+
+<button>Confirmar</button>
+
+</form>
+
+{% else %}
+✓
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+
+<hr>
+
+
+<h2>🚁 Frota</h2>
+
+<div class="grid">
+
+{% for heli in helicopteros %}
+
+{% set autonomia = heli[3] / heli[2] if heli[2] > 0 else 0 %}
+{% set duracao_voo = 30 %}
+{% set consumo_voo = (duracao_voo / 60) * heli[2] %}
+{% set reserva = (20 / 60) * heli[2] %}
+{% set voos = (heli[3] - reserva) / consumo_voo if heli[3] > reserva else 0 %}
+
+<div class="card">
+
+<h2>{{ heli[1] }}</h2>
+
+<p><b>Combustível:</b> {{ heli[3] }} L</p>
+
+{% set porcentagem = [(heli[3] / 400) * 100, 100] | min %}
+
+<div style="background:#ddd;width:250px;height:20px;border-radius:5px;">
+
+<div style="
+height:20px;
+width:{{ porcentagem }}%;
+background:
+{% if porcentagem < 20 %}
+red
+{% elif porcentagem < 50 %}
+orange
+{% else %}
+green
+{% endif %};
+border-radius:5px;">
+</div>
+
+</div>
+
+<p><b>Consumo:</b> {{ heli[2] }} L/h</p>
+
+<p><b>Autonomia:</b> {{ autonomia|round(2) }} h</p>
+
+<p><b>Voos possíveis:</b> {{ voos|round(0) }}</p>
+
+{% if heli[3] <= reserva %}
+
+<p style="color:red;">🔴 Combustível abaixo da reserva</p>
+
+{% elif voos < 2 %}
+
+<p style="color:orange;">🟡 Poucos voos restantes</p>
+
+{% else %}
+
+<p style="color:green;">🟢 Operação Normal</p>
+
+{% endif %}
+
+<form method="POST" action="/abastecer">
+
+<input type="hidden" name="id" value="{{ heli[0] }}">
+<input name="litros" placeholder="Litros">
+
+<button>Abastecer</button>
+
+</form>
+
+<form method="POST" action="/voo">
+
+<input type="hidden" name="id" value="{{ heli[0] }}">
+<input name="duracao" placeholder="Voo (min)">
+
+<button>Registrar voo</button>
+
+</form>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

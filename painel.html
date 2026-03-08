@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Painel Operacional</title>
+
+<meta http-equiv="refresh" content="5">
+
+<style>
+
+body{
+background:black;
+color:white;
+font-family:Arial;
+text-align:center;
+}
+
+.voo{
+font-size:28px;
+margin:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🚁 Centro de Operações</h1>
+
+{% for r in radar %}
+
+<div class="voo">
+
+{{ r.prefixo }} | {{ r.hora }}
+
+{% if r.tempo > 0 %}
+⏱ {{ r.tempo }} min
+{% else %}
+⚠ ATRASO
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</body>
+</html>

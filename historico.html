@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Histórico de Voos</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<h1>📜 Histórico de Voos</h1>
+
+<a href="/">
+<button>⬅ Voltar ao Dashboard</button>
+</a>
+
+<hr>
+
+<table border="1" cellpadding="10">
+
+<tr>
+
+<th>ID</th>
+<th>Aeronave</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Duração (min)</th>
+<th>Combustível usado (L)</th>
+
+</tr>
+
+{% for voo in historico %}
+
+<tr>
+
+<td>{{ voo[0] }}</td>
+<td>{{ voo[1] }}</td>
+<td>{{ voo[2] }}</td>
+<td>{{ voo[3] }}</td>
+<td>{{ voo[4] }}</td>
+<td>{{ voo[5]|round(2) }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+
+</html>

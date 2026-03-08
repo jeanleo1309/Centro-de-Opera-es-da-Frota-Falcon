@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Relatório Diário</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<h1>📊 Relatório de Operações</h1>
+
+<h2>Data: {{ hoje }}</h2>
+
+<table border="1" cellpadding="10">
+
+<tr>
+
+<th>Helicóptero</th>
+<th>Voos</th>
+<th>Horas</th>
+<th>Combustível usado (L)</th>
+
+</tr>
+
+{% for r in relatorio %}
+
+<tr>
+
+<td>{{ r[0] }}</td>
+<td>{{ r[1] }}</td>
+<td>{{ r[2]|round(2) }}</td>
+<td>{{ r[3]|round(2) }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br>
+
+<a href="/">⬅ Voltar ao Dashboard</a>
+
+</body>
+
+</html>

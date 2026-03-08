@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Radar da Frota</title>
+
+<meta http-equiv="refresh" content="5">
+
+<style>
+
+body{
+background:#111;
+color:white;
+font-family:Arial;
+}
+
+.card{
+background:#1e1e1e;
+padding:20px;
+margin:10px;
+border-radius:10px;
+width:240px;
+display:inline-block;
+}
+
+.status-agendado{color:yellow;}
+.status-realizado{color:#aaa;}
+.status-pago{color:orange;}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🚁 Radar da Frota</h1>
+<hr>
+
+<h2>🛰 Radar Rápido</h2>
+
+<a href="/radar">
+<button>🚁 Abrir Radar Operacional</button>
+</a>
+
+{% for r in radar %}
+
+<div class="card">
+
+<h2>{{ r.prefixo }}</h2>
+
+<p>Hora: {{ r.hora }}</p>
+
+<p>Duração: {{ r.duracao }} min</p>
+
+<p>Status: {{ r.status }}</p>
+
+{% if r.tempo > 0 %}
+<p>⏱ Decola em {{ r.tempo }} min</p>
+{% else %}
+<p style="color:red;">⚠ Atrasado</p>
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</body>
+</html>
